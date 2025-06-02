@@ -95,7 +95,7 @@ def calc():
     draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'yeast')
     draw_plots(history_basic, history_l1, 'basic', 'l1', 'yeast')
     draw_plots(history_basic, history_l2, 'basic', 'l2', 'yeast')
-    draw_plots(history_basic, history_early_stopping, 'basic', 'early stopping', 'yeast')
+    draw_plots(history_basic, history_early_stopping, 'basic', 'early_stopping', 'yeast')
     draw_plots(history_basic, history_simplified, 'basic', 'simplified', 'yeast')
     draw_plots(history_basic, history_augment, 'basic', 'augment', 'yeast')
     draw_plots(history_basic, history_l1_l2_dropout, 'basic', 'l1_l2_dropout', 'yeast')
