@@ -2,7 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-def draw_plots(history1, history2, name1, name2, name, output_dir='results/iris'):
+def draw_plots(history1, history2, name1, name2, name):
+    output_dir = "results/" + name
     os.makedirs(output_dir, exist_ok=True)  
     plt.figure(figsize=(12, 18))
 

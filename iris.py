@@ -103,10 +103,10 @@ def calc():
     print("Model l1_l2_dropout: ", time.time() - start_time, "s")
 
     # Wykresy
-    draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_l1, 'basic', 'l1', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_l2, 'basic', 'l2', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_early_stopping, 'basic', 'early stopping', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_simplified, 'basic', 'simplified', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_augment, 'basic', 'augment', 'iris', output_dir='results/iris')
-    draw_plots(history_basic, history_l1_l2_dropout, 'basic', 'l1_l2_dropout', 'iris', output_dir='results/iris')
+    draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'iris')
+    draw_plots(history_basic, history_l1, 'basic', 'l1', 'iris')
+    draw_plots(history_basic, history_l2, 'basic', 'l2', 'iris')
+    draw_plots(history_basic, history_early_stopping, 'basic', 'early stopping', 'iris')
+    draw_plots(history_basic, history_simplified, 'basic', 'simplified', 'iris')
+    draw_plots(history_basic, history_augment, 'basic', 'augment', 'iris')
+    draw_plots(history_basic, history_l1_l2_dropout, 'basic', 'l1_l2_dropout', 'iris')
