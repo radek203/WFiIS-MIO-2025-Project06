@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import os
 
-
-def draw_plots(history1, history2, name1, name2, name):
-    # Wykresy
+def draw_plots(history1, history2, name1, name2, name, output_dir='results/iris'):
+    os.makedirs(output_dir, exist_ok=True)  
     plt.figure(figsize=(12, 18))
 
     plt.subplot(3, 1, 1)
@@ -40,9 +40,9 @@ def draw_plots(history1, history2, name1, name2, name):
     plt.grid(True)
 
     plt.tight_layout()
-    plt.savefig(f"results/{name}_{name1}_{name2}.png")
+    filepath = os.path.join(output_dir, f"{name}_{name1}_{name2}.png")
+    plt.savefig(filepath)
     plt.show()
-
 
 def augment_data(X, noise_factor=0.05):
     noise = np.random.normal(loc=0.0, scale=noise_factor, size=X.shape)
