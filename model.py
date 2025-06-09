@@ -11,11 +11,11 @@ from utils import augment_data
 
 class Model:
 
-    def __init__(self, structure, epoches):
+    def __init__(self, structure, epochs):
         self.structure = structure
-        self.epoches = epoches
+        self.epochs = epochs
 
-    def learn(self, X, y, early_stopping=-1, augment=False, test_size=0.3):
+    def learn(self, X, y, test_size, early_stopping=-1, augment=False):
         # Zakodowanie etykiet
         le = LabelEncoder()
         y_encoded = le.fit_transform(y)
@@ -50,14 +50,14 @@ class Model:
         # Trening
         if early_stopping >= 1:
             es = EarlyStopping(
-                monitor='val_loss', # 'val_accuracy', 'val_f1_score'
+                monitor='val_f1_score', # 'val_accuracy', 'val_loss'
                 patience=early_stopping # liczba epok bez poprawy
             )
 
             history = model.fit(
                 X_train, y_train,
                 validation_data=(X_test, y_test),
-                epochs=self.epoches,
+                epochs=self.epochs,
                 batch_size=32,
                 verbose=0,
                 callbacks=[es]
@@ -66,7 +66,7 @@ class Model:
             history = model.fit(
                 X_train, y_train,
                 validation_data=(X_test, y_test),
-                epochs=self.epoches,
+                epochs=self.epochs,
                 batch_size=32,
                 verbose=0
             )

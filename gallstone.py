@@ -4,29 +4,26 @@ import time
 from keras import Input
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras import regularizers
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 from model import Model
 from utils import draw_plots
 
-# wersja do eksperymentowania
-# najpierw sprawdzenie czy jedna warstwa da rade
+
 def calc():
     # Wczytanie danych
     df = pd.read_csv("data/gallstone.data", sep=',')
 
-    # Podział na cechy i etykiety
-    X = df.iloc[:, 1:].values  
-    y = df.iloc[:, 0].values   
+    # Podział kolumn
+    X = df.iloc[:, 1:].values # cechy
+    y = df.iloc[:, 0].values # etykiety
 
     n_features = X.shape[1]
     n_classes = len(np.unique(y))
 
-    epochs = 200
+    epochs = 170
     test_size = 0.2
 
-    # Model podstawowy
+    # Model basic
     model_basic = Model([
         Input(shape=(n_features,)),
         Dense(128, activation='relu'),
@@ -37,7 +34,7 @@ def calc():
     history_basic = model_basic.learn(X, y, test_size=test_size)
     print("Model basic:", time.time() - start_time, "s")
 
-    # Model z dropoutem
+    # Model z dropout
     model_dropout = Model([
         Input(shape=(n_features,)),
         Dense(128, activation='relu'),
@@ -49,7 +46,7 @@ def calc():
     history_dropout = model_dropout.learn(X, y, test_size=test_size)
     print("Model dropout:", time.time() - start_time, "s")
 
-    # Model z L1
+    # Model z regularyzacją L1
     model_l1 = Model([
         Input(shape=(n_features,)),
         Dense(128, activation='relu', kernel_regularizer=regularizers.l1(0.001)),
@@ -57,10 +54,10 @@ def calc():
     ], epochs)
 
     start_time = time.time()
-    history_l1 = model_l1.learn(X, y)
+    history_l1 = model_l1.learn(X, y, test_size=test_size)
     print("Model l1:", time.time() - start_time, "s")
 
-    # Model z L2
+    # Model z regularyzacją L2
     model_l2 = Model([
         Input(shape=(n_features,)),
         Dense(128, activation='relu', kernel_regularizer=regularizers.l2(1e-5)),
@@ -68,18 +65,24 @@ def calc():
     ], epochs)
 
     start_time = time.time()
-    history_l2 = model_l2.learn(X, y)
+    history_l2 = model_l2.learn(X, y, test_size=test_size)
     print("Model l2:", time.time() - start_time, "s")
 
-    # Model z early stopping
+    # Model z EarlyStopping
+    model_early_stopping = Model([
+        Input(shape=(n_features,)),
+        Dense(128, activation='relu'),
+        Dense(n_classes, activation='softmax')
+    ], epochs)
+
     start_time = time.time()
-    history_early_stopping = model_basic.learn(X, y, early_stopping=10)
+    history_early_stopping = model_early_stopping.learn(X, y, test_size=test_size, early_stopping=10)
     print("Model early_stopping:", time.time() - start_time, "s")
 
-    # Model uproszczony
+    # Model simplified
     model_simplified = Model([
         Input(shape=(n_features,)),
-        Dense(64, activation='relu'),
+        Dense(10, activation='relu'),
         Dense(n_classes, activation='softmax')
     ], epochs)
 
@@ -87,9 +90,15 @@ def calc():
     history_simplified = model_simplified.learn(X, y, test_size=test_size)
     print("Model simplified:", time.time() - start_time, "s")
 
-    # Model z augmentacją
+    # Model augment
+    model_augment = Model([
+        Input(shape=(n_features,)),
+        Dense(128, activation='relu'),
+        Dense(n_classes, activation='softmax')
+    ], epochs)
+
     start_time = time.time()
-    history_augment = model_basic.learn(X, y, augment=True)
+    history_augment = model_augment.learn(X, y, test_size=test_size, augment=True)
     print("Model augment:", time.time() - start_time, "s")
 
     # Model z L1 + L2 + Dropout
@@ -117,8 +126,6 @@ def calc():
     print("Model l2_dropout:", time.time() - start_time, "s")
 
     # Wykresy
-    # czasami metody dzialaja lepiej, a czasami gorzej, bez zmian w kodzie (sprawdzic dlaczego)
-
     draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'gallstone_last') 
     draw_plots(history_basic, history_l1, 'basic', 'l1', 'gallstone_last') 
     draw_plots(history_basic, history_l2, 'basic', 'l2', 'gallstone_last') 
