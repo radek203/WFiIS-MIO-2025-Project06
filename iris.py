@@ -121,6 +121,19 @@ def calc():
     history_l1_l2_dropout = model_l1_l2_dropout.learn(X, y, test_size=test_size)
     print("Model l1_l2_dropout: ", time.time() - start_time, "s")
 
+    # Model z L2 + Dropout
+    model_l2_dropout = Model([
+        Input(shape=(n_features,)),
+        Dense(128, activation='relu', kernel_regularizer=regularizers.l1(0.01),),
+        Dropout(0.4),
+        Dense(64, activation='relu', kernel_regularizer=regularizers.l1(0.01),),
+        Dense(n_classes, activation='softmax')
+    ], epochs)
+
+    start_time = time.time()
+    history_l2_dropout = model_l2_dropout.learn(X, y, test_size=test_size)
+    print("Model l2_dropout:", time.time() - start_time, "s")
+
     # Wykresy
     draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'iris')
     draw_plots(history_basic, history_l1, 'basic', 'l1', 'iris')
@@ -129,3 +142,4 @@ def calc():
     draw_plots(history_basic, history_simplified, 'basic', 'simplified', 'iris')
     draw_plots(history_basic, history_augment, 'basic', 'augment', 'iris')
     draw_plots(history_basic, history_l1_l2_dropout, 'basic', 'l1_l2_dropout', 'iris')
+    draw_plots(history_basic, history_l2_dropout, 'basic', 'l2_dropout', 'iris')
