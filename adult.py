@@ -43,7 +43,7 @@ def calc():
 
     start_time = time.time()
     history_basic = model_basic.learn(X, y, test_size=test_size)
-    print("Model basic: ", time.time() - start_time, "s")
+    print("Model basic:", time.time() - start_time, "s")
 
     # Model z dropout
     model_dropout = Model([
@@ -56,7 +56,7 @@ def calc():
 
     start_time = time.time()
     history_dropout = model_dropout.learn(X, y, test_size=test_size)
-    print("Model dropout: ", time.time() - start_time, "s")
+    print("Model dropout:", time.time() - start_time, "s")
 
     # Model z regularyzacją L1
     model_l1 = Model([
@@ -68,7 +68,7 @@ def calc():
 
     start_time = time.time()
     history_l1 = model_l1.learn(X, y, test_size=test_size)
-    print("Model l1: ", time.time() - start_time, "s")
+    print("Model l1:", time.time() - start_time, "s")
 
     # Model z regularyzacją L2
     model_l2 = Model([
@@ -80,7 +80,7 @@ def calc():
 
     start_time = time.time()
     history_l2 = model_l2.learn(X, y, test_size=test_size)
-    print("Model l2: ", time.time() - start_time, "s")
+    print("Model l2:", time.time() - start_time, "s")
 
     # Model z EarlyStopping
     model_early_stopping = Model([
@@ -92,7 +92,7 @@ def calc():
 
     start_time = time.time()
     history_early_stopping = model_early_stopping.learn(X, y, test_size=test_size, early_stopping=15)
-    print("Model early_stopping: ", time.time() - start_time, "s")
+    print("Model early_stopping:", time.time() - start_time, "s")
 
     # Model simplified
     model_simplified = Model([
@@ -104,7 +104,7 @@ def calc():
 
     start_time = time.time()
     history_simplified = model_simplified.learn(X, y, test_size=test_size)
-    print("Model simplified: ", time.time() - start_time, "s")
+    print("Model simplified:", time.time() - start_time, "s")
 
     # Model augment
     model_augment = Model([
@@ -116,7 +116,7 @@ def calc():
 
     start_time = time.time()
     history_augment = model_augment.learn(X, y, test_size=test_size, augment=True)
-    print("Model augment: ", time.time() - start_time, "s")
+    print("Model augment:", time.time() - start_time, "s")
 
     # Model z L1 + L2 + Dropout
     model_l1_l2_dropout = Model([
@@ -129,7 +129,20 @@ def calc():
 
     start_time = time.time()
     history_l1_l2_dropout = model_l1_l2_dropout.learn(X, y, test_size=test_size)
-    print("Model l1_l2_dropout: ", time.time() - start_time, "s")
+    print("Model l1_l2_dropout:", time.time() - start_time, "s")
+
+    # Model z L2 + Dropout
+    model_l2_dropout = Model([
+        Input(shape=(n_features,)),
+        Dense(512, activation='relu', kernel_regularizer=regularizers.l2(l2=0.01)),
+        Dropout(0.4),
+        Dense(256, activation='relu'),
+        Dense(n_classes, activation='softmax')
+    ], epochs)
+
+    start_time = time.time()
+    history_l2_dropout = model_l2_dropout.learn(X, y, test_size=test_size)
+    print("Model l2_dropout:", time.time() - start_time, "s")
 
     # Wykresy
     draw_plots(history_basic, history_dropout, 'basic', 'dropout', 'adult')
@@ -139,3 +152,4 @@ def calc():
     draw_plots(history_basic, history_simplified, 'basic', 'simplified', 'adult')
     draw_plots(history_basic, history_augment, 'basic', 'augment', 'adult')
     draw_plots(history_basic, history_l1_l2_dropout, 'basic', 'l1_l2_dropout', 'adult')
+    draw_plots(history_basic, history_l2_dropout, 'basic', 'l2_dropout', 'adult')
