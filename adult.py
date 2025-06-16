@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import time
 from keras import Input
+from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras import regularizers
 
@@ -11,17 +12,20 @@ from utils import draw_plots
 
 def calc():
     # Wczytanie danych
-    df = pd.read_csv("data/adult.data", sep=',', header=None, skipinitialspace=True)
+    df = pd.read_csv("data/adult.data", sep=',', header=None, na_values=" ?", skipinitialspace=True)
 
     # Usunięcie braków danych
     df.dropna(inplace=True)
 
-    # Zakodowanie zmiennych kategorycznych
-    df_encoded = pd.get_dummies(df)
-
     # Podział kolumn
-    X = df_encoded.iloc[:, :-1].values  # wszystkie kolumny poza ostatnią
-    y = df_encoded.iloc[:, -1].values  # ostatnia kolumna — etykiety
+    X = df.iloc[:, :-1] # cechy
+    y = df.iloc[:, -1].values # etykiety
+
+    # Zakodowanie cech kategorycznych
+    for col in X.select_dtypes(include=["object"]).columns:
+        X[col] = LabelEncoder().fit_transform(X[col])
+
+    X = X.values
 
     n_features = X.shape[1]
     n_classes = len(np.unique(y))
